@@ -5,12 +5,18 @@
 //  Created by Sultan on 16/12/23.
 //
 
+import PhotosUI
 import SwiftUI
 
 struct EditProfileView: View {
+    let user: User
+
     @State private var bio = ""
     @State private var link = ""
     @State private var isPrivateProfile = false
+    @StateObject var viewModel = EditProfileViewModel()
+
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
@@ -25,12 +31,22 @@ struct EditProfileView: View {
                             Text("Name")
                                 .fontWeight(.semibold)
 
-                            Text("Chaler Leclerc")
+                            Text(user.fullName)
                         }
 
                         Spacer()
 
-                        CircularProfileImage()
+                        PhotosPicker(selection: $viewModel.selectedItem) {
+                            if let image = viewModel.profileImage {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                            } else {
+                                CircularProfileImage(imageUrl: user.profileImageUrl, size: .small)
+                            }
+                        }
                     }
 
                     Divider()
@@ -71,22 +87,29 @@ struct EditProfileView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {}
-                        .font(.subheadline)
-                        .foregroundColor(.black)
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.black)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {}
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.black)
+                    Button("Done") {
+                        Task {
+                            try await viewModel.updateUserData()
+                            dismiss()
+                        }
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
                 }
             }
         }
     }
 }
 
-#Preview {
-    EditProfileView()
-}
+// #Preview {
+//    EditProfileView()
+// }

@@ -23,15 +23,19 @@ struct RegistrationView: View {
                 .padding(.bottom, 16)
 
             TextField("Enter your email", text: $viewModel.email)
+                .autocapitalization(.none)
                 .modifier(ThreadsTextFieldModifier())
 
             SecureField("Enter your password", text: $viewModel.password)
+                .autocapitalization(.none)
                 .modifier(ThreadsTextFieldModifier())
 
             TextField("Enter your full name", text: $viewModel.fullName)
+                .autocapitalization(.none)
                 .modifier(ThreadsTextFieldModifier())
 
             TextField("Enter your username", text: $viewModel.userName)
+                .autocapitalization(.none)
                 .modifier(ThreadsTextFieldModifier())
 
             Button {

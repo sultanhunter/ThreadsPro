@@ -12,6 +12,14 @@ struct ThreadsTabView: View {
 
     @State private var showCreateThread = false
 
+    init(selectedTabIndex: Int = 0, showCreateThread: Bool = false) {
+        self.selectedTabIndex = selectedTabIndex
+        self.showCreateThread = showCreateThread
+        Task {
+            try await UserService.shared.fetchCurrentUser()
+        }
+    }
+
     var body: some View {
         TabView(selection: $selectedTabIndex) {
             FeedView()
@@ -47,7 +55,7 @@ struct ThreadsTabView: View {
                 .onAppear { selectedTabIndex = 3 }
                 .tag(3)
 
-            ProfileView()
+            CurrentUserProfileView()
                 .tabItem {
                     Image(systemName: selectedTabIndex == 4 ? "person.fill" : "person")
                         .environment(\.symbolVariants, selectedTabIndex == 4 ? .fill : .none)
