@@ -17,3 +17,5 @@ Implemented features list:
 Features to Implement:
 * Likes.
 * Reply
+* Follow
+* Activity 
